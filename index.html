@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Covista DORA Metrics · Q3 2026</title>
+<style>
+:root {
+  --font-anthropic-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-anthropic-serif: Georgia, "Times New Roman", serif;
+  --cds-font-size-caption: 0.8125rem; --cds-font-size-body: 0.9375rem; --cds-font-size-heading: 1.125rem; --cds-font-size-title: 1.75rem;
+  --cds-font-weight-medium: 600;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 16px; --cds-gap-lg: 24px; --cds-gap-xl: 32px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 20px;
+  --cds-radius: 10px; --cds-dur-slow: 300ms;
+  --color-bg: #faf9f7; --color-panel: #ffffff; --color-fg: #1f1e1d; --color-fg-muted: #6b6a66; --color-border-line: #e5e3df;
+  --color-ok: #1a7f37; --color-warn: #9a6700; --color-bad: #cf222e;
+  --cds-surface-popover: #ffffff; --cds-border: #d8d6d1; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12); --cds-text-secondary: #6b6a66;
+  --cds-chart-grid: #ecebe8; --cds-chart-axis: #b9b7b1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1c1b1a; --color-panel: #262523; --color-fg: #ece9e4; --color-fg-muted: #a39f98; --color-border-line: #3a3835;
+    --color-ok: #4ac26b; --color-warn: #d4a72c; --color-bad: #ff7b72;
+    --cds-surface-popover: #2f2d2b; --cds-border: #45423e; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.5); --cds-text-secondary: #a39f98;
+    --cds-chart-grid: #33312e; --cds-chart-axis: #5a5752;
+  }
+}
+html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+#dash-root { padding: var(--dash-gutter, 24px) var(--dash-gutter, 24px) 48px; }
+.dash-skeleton { color: var(--color-fg-muted); }
+.dr-footer { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin-top: var(--cds-gap-lg); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+</head>
+<body>
+<div id="dash-root">
+<script>
+/* Data: Harness DORA API exports (orgs Banner, APG, Financial_Aid; project Build_Deploy), Jul 1 – Sep 30, 2026. People omitted. */
+window.DORA_DATA = { pipelines: [{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","institution":"RUSM-RUSVM","tier":"NPROD","kind":"CD","executions":"22","deployments":"20","failures":"2","cfr":"0.0909","deploys_per_week":"1.54","deploy_days":"10","first_deploy":"2026-08-18","last_deploy":"2026-09-25","lead_time_hours":"0.04","lead_time_source":"pipeline start (fallback)","mttr_hours":"0.92","recoveries":"2","mttr_min_hours":"0.59","mttr_max_hours":"1.24","lead_time_max_hours":"0.06","unmatched_failures":"0","mttr_quality":"medium"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","institution":"Shared","tier":"PROD","kind":"CI","executions":"246","deployments":"59","failures":"187","cfr":"0.7602","deploys_per_week":"4.54","deploy_days":"15","first_deploy":"2026-08-14","last_deploy":"2026-09-29","lead_time_hours":"199.31","lead_time_source":"git commit","mttr_hours":"1.99","recoveries":"24","mttr_min_hours":"0","mttr_max_hours":"10.14","lead_time_max_hours":"4871.25","unmatched_failures":"163","mttr_quality":"low"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline","institution":"RUSM-RUSVM","tier":"PROD","kind":"CD","executions":"1","deployments":"1","failures":"0","cfr":"0.0","deploys_per_week":"0.08","deploy_days":"1","first_deploy":"2026-09-29","last_deploy":"2026-09-29","lead_time_hours":"0.02","lead_time_source":"pipeline start (fallback)","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"0.02","unmatched_failures":"0","mttr_quality":"low"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","institution":"AUC","tier":"NPROD","kind":"CD","executions":"15","deployments":"15","failures":"0","cfr":"0.0","deploys_per_week":"1.15","deploy_days":"7","first_deploy":"2026-08-14","last_deploy":"2026-09-23","lead_time_hours":"0.04","lead_time_source":"pipeline start (fallback)","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"0.05","unmatched_failures":"0","mttr_quality":"low"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","institution":"WU","tier":"NPROD","kind":"CD","executions":"59","deployments":"59","failures":"0","cfr":"0.0","deploys_per_week":"4.54","deploy_days":"19","first_deploy":"2026-08-06","last_deploy":"2026-09-28","lead_time_hours":"0.03","lead_time_source":"pipeline start (fallback)","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"0.08","unmatched_failures":"0","mttr_quality":"low"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","institution":"CU","tier":"PROD","kind":"CD","executions":"11","deployments":"8","failures":"3","cfr":"0.2727","deploys_per_week":"0.62","deploy_days":"4","first_deploy":"2026-08-31","last_deploy":"2026-09-29","lead_time_hours":"0.03","lead_time_source":"pipeline start (fallback)","mttr_hours":"180.18","recoveries":"2","mttr_min_hours":"0.4","mttr_max_hours":"359.96","lead_time_max_hours":"0.05","unmatched_failures":"1","mttr_quality":"low"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline","institution":"AUC","tier":"PROD","kind":"CD","executions":"2","deployments":"2","failures":"0","cfr":"0.0","deploys_per_week":"0.15","deploy_days":"2","first_deploy":"2026-09-14","last_deploy":"2026-09-23","lead_time_hours":"0.03","lead_time_source":"pipeline start (fallback)","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"0.04","unmatched_failures":"0","mttr_quality":"low"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline","institution":"WU","tier":"PROD","kind":"CD","executions":"2","deployments":"2","failures":"0","cfr":"0.0","deploys_per_week":"0.15","deploy_days":"1","first_deploy":"2026-09-24","last_deploy":"2026-09-24","lead_time_hours":"0.03","lead_time_source":"pipeline start (fallback)","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"0.03","unmatched_failures":"0","mttr_quality":"low"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","institution":"CU","tier":"NPROD","kind":"CD","executions":"65","deployments":"64","failures":"1","cfr":"0.0154","deploys_per_week":"4.92","deploy_days":"23","first_deploy":"2026-07-20","last_deploy":"2026-09-29","lead_time_hours":"0.03","lead_time_source":"pipeline start (fallback)","mttr_hours":"0.17","recoveries":"1","mttr_min_hours":"0.17","mttr_max_hours":"0.17","lead_time_max_hours":"0.07","unmatched_failures":"0","mttr_quality":"medium"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","institution":"APG","tier":"UNTAGGED","kind":"CI","executions":"33","deployments":"10","failures":"23","cfr":"0.697","deploys_per_week":"0.77","deploy_days":"5","first_deploy":"2026-08-21","last_deploy":"2026-09-29","lead_time_hours":"257.21","lead_time_source":"git commit","mttr_hours":"13.61","recoveries":"3","mttr_min_hours":"0.53","mttr_max_hours":"20.51","lead_time_max_hours":"2414.03","unmatched_failures":"20","mttr_quality":"low"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","institution":"APG","tier":"NPROD","kind":"CI","executions":"69","deployments":"40","failures":"29","cfr":"0.4203","deploys_per_week":"3.08","deploy_days":"19","first_deploy":"2026-07-06","last_deploy":"2026-09-29","lead_time_hours":"312.71","lead_time_source":"git commit","mttr_hours":"8.48","recoveries":"13","mttr_min_hours":"0.24","mttr_max_hours":"84.19","lead_time_max_hours":"1539.63","unmatched_failures":"16","mttr_quality":"low"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","institution":"APG","tier":"NPROD","kind":"CD","executions":"38","deployments":"14","failures":"24","cfr":"0.6316","deploys_per_week":"1.08","deploy_days":"9","first_deploy":"2026-07-07","last_deploy":"2026-09-22","lead_time_hours":"0.16","lead_time_source":"pipeline start (fallback)","mttr_hours":"73.58","recoveries":"7","mttr_min_hours":"0.22","mttr_max_hours":"496.86","lead_time_max_hours":"0.25","unmatched_failures":"17","mttr_quality":"low"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","institution":"APG","tier":"NPROD","kind":"CD","executions":"36","deployments":"32","failures":"4","cfr":"0.1111","deploys_per_week":"2.46","deploy_days":"15","first_deploy":"2026-07-06","last_deploy":"2026-09-29","lead_time_hours":"0.74","lead_time_source":"pipeline start (fallback)","mttr_hours":"14.52","recoveries":"3","mttr_min_hours":"0.6","mttr_max_hours":"28.29","lead_time_max_hours":"17.24","unmatched_failures":"0","mttr_quality":"medium"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","institution":"APG","tier":"NPROD","kind":"CD","executions":"34","deployments":"29","failures":"5","cfr":"0.1471","deploys_per_week":"2.23","deploy_days":"15","first_deploy":"2026-07-06","last_deploy":"2026-09-29","lead_time_hours":"0.73","lead_time_source":"pipeline start (fallback)","mttr_hours":"12.23","recoveries":"3","mttr_min_hours":"1.17","mttr_max_hours":"20.66","lead_time_max_hours":"17.28","unmatched_failures":"2","mttr_quality":"low"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","institution":"APG","tier":"NPROD","kind":"CI","executions":"74","deployments":"49","failures":"25","cfr":"0.3378","deploys_per_week":"3.77","deploy_days":"19","first_deploy":"2026-07-06","last_deploy":"2026-09-29","lead_time_hours":"325.28","lead_time_source":"git commit","mttr_hours":"51.83","recoveries":"9","mttr_min_hours":"0.24","mttr_max_hours":"384.25","lead_time_max_hours":"1558.95","unmatched_failures":"16","mttr_quality":"low"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","institution":"APG","tier":"PROD","kind":"CI","executions":"9","deployments":"7","failures":"2","cfr":"0.2222","deploys_per_week":"0.54","deploy_days":"2","first_deploy":"2026-08-21","last_deploy":"2026-08-24","lead_time_hours":"387.45","lead_time_source":"git commit","mttr_hours":"568.86","recoveries":"1","mttr_min_hours":"568.86","mttr_max_hours":"568.86","lead_time_max_hours":"457","unmatched_failures":"1","mttr_quality":"low"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build","institution":"APG","tier":"PROD","kind":"CI","executions":"8","deployments":"2","failures":"6","cfr":"0.75","deploys_per_week":"0.15","deploy_days":"1","first_deploy":"2026-08-25","last_deploy":"2026-08-25","lead_time_hours":"480.38","lead_time_source":"git commit","mttr_hours":"0.45","recoveries":"1","mttr_min_hours":"0.45","mttr_max_hours":"0.45","lead_time_max_hours":"481.48","unmatched_failures":"5","mttr_quality":"low"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","institution":"Financial Aid","tier":"NPROD","kind":"CD","executions":"19","deployments":"14","failures":"5","cfr":"0.2632","deploys_per_week":"1.08","deploy_days":"7","first_deploy":"2026-07-07","last_deploy":"2026-08-27","lead_time_hours":"0.05","lead_time_source":"pipeline start (fallback)","mttr_hours":"7.7","recoveries":"3","mttr_min_hours":"0.09","mttr_max_hours":"22.71","lead_time_max_hours":"0.11","unmatched_failures":"2","mttr_quality":"low"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","institution":"Financial Aid","tier":"NPROD","kind":"CD","executions":"33","deployments":"13","failures":"20","cfr":"0.6061","deploys_per_week":"1.0","deploy_days":"8","first_deploy":"2026-07-07","last_deploy":"2026-08-27","lead_time_hours":"0.15","lead_time_source":"pipeline start (fallback)","mttr_hours":"0.67","recoveries":"7","mttr_min_hours":"0.32","mttr_max_hours":"1.34","lead_time_max_hours":"0.33","unmatched_failures":"13","mttr_quality":"low"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","institution":"Financial Aid","tier":"PROD","kind":"CI","executions":"22","deployments":"17","failures":"5","cfr":"0.2273","deploys_per_week":"1.31","deploy_days":"9","first_deploy":"2026-07-07","last_deploy":"2026-09-09","lead_time_hours":"656.26","lead_time_source":"git commit","mttr_hours":"188.75","recoveries":"1","mttr_min_hours":"188.75","mttr_max_hours":"188.75","lead_time_max_hours":"1368.51","unmatched_failures":"4","mttr_quality":"low"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build","institution":"Financial Aid","tier":"PROD","kind":"CI","executions":"3","deployments":"1","failures":"2","cfr":"0.6667","deploys_per_week":"0.08","deploy_days":"1","first_deploy":"2026-08-03","last_deploy":"2026-08-03","lead_time_hours":"326.04","lead_time_source":"git commit","mttr_hours":"","recoveries":"0","mttr_min_hours":"","mttr_max_hours":"","lead_time_max_hours":"326.04","unmatched_failures":"0","mttr_quality":"low"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","institution":"Financial Aid","tier":"NPROD","kind":"CI","executions":"19","deployments":"13","failures":"6","cfr":"0.3158","deploys_per_week":"1.0","deploy_days":"7","first_deploy":"2026-07-07","last_deploy":"2026-09-22","lead_time_hours":"787.35","lead_time_source":"git commit","mttr_hours":"64.6","recoveries":"4","mttr_min_hours":"0.84","mttr_max_hours":"126.1","lead_time_max_hours":"1532.2","unmatched_failures":"2","mttr_quality":"low"}], deployments: [{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T15:51:09Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T13:57:07Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T10:03:03Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T14:36:38Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T14:15:44Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T14:02:49Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T04:23:33Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T20:36:22Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T20:37:22Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T20:21:47Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T18:55:15Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T18:26:22Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T15:45:55Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T15:22:59Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T20:19:06Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-14T16:45:43Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T18:14:37Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T17:13:34Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T14:12:44Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T17:11:01Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T17:01:03Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T16:59:44Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T18:00:24Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T16:31:26Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T16:25:17Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T14:29:07Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T13:47:41Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T19:49:05Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T18:17:48Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T18:08:15Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T15:44:46Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T16:18:30Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T16:04:01Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-25","deployed_at":"2026-09-25T09:55:05Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-24","deployed_at":"2026-09-24T14:28:14Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-24","deployed_at":"2026-09-24T14:10:16Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-23","deployed_at":"2026-09-23T20:27:00Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-23","deployed_at":"2026-09-23T14:03:54Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-23","deployed_at":"2026-09-23T13:20:55Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-23","deployed_at":"2026-09-23T06:07:13Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T18:23:16Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T15:46:31Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T04:14:37Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T03:34:37Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T21:08:23Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T21:01:09Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T20:46:43Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T20:33:28Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T20:24:28Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T20:16:28Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T19:51:33Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T19:38:54Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T18:53:10Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T18:40:58Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T18:30:34Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T18:28:33Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T18:19:32Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T17:14:31Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T17:00:13Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T16:39:19Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T15:50:55Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T15:43:49Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T15:37:25Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T15:15:18Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-18","deployed_at":"2026-09-18T20:14:23Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-17","deployed_at":"2026-09-17T21:01:53Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-17","deployed_at":"2026-09-17T17:25:15Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-17","deployed_at":"2026-09-17T17:23:14Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T08:30:51Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T08:14:21Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T06:56:22Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T06:31:35Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T17:51:53Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-10","deployed_at":"2026-09-10T18:09:10Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-10","deployed_at":"2026-09-10T17:05:16Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T16:16:46Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T14:12:43Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-08-31","deployed_at":"2026-08-31T19:19:20Z"},{"org":"Banner","app":"BannerJobs","pipeline":"BannerJobs-build","tier":"PROD","kind":"CI","day":"2026-08-14","deployed_at":"2026-08-14T16:16:09Z"},{"org":"Banner","app":"RUSM-RUSVM","pipeline":"RUSM-RUSVM-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:25:33Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T14:15:45Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T21:23:40Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T21:03:26Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T20:49:26Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T19:55:20Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T19:45:30Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T18:59:08Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T18:40:26Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T17:10:30Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T16:12:58Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T21:16:18Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T16:24:40Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-31","deployed_at":"2026-08-31T19:41:56Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T14:52:56Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-14","deployed_at":"2026-08-14T16:18:32Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-28","deployed_at":"2026-09-28T16:34:08Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-28","deployed_at":"2026-09-28T16:27:52Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T19:35:23Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T19:11:17Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-25","deployed_at":"2026-09-25T16:07:17Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T20:31:06Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T11:45:57Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T10:15:45Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T19:14:04Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T17:41:39Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T15:03:06Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T07:43:58Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T17:13:55Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T16:30:58Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T15:28:33Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T14:26:28Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T12:57:24Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T23:31:57Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T21:40:52Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T20:25:01Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T20:16:48Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T19:41:52Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T13:55:54Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T13:05:43Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-17","deployed_at":"2026-09-17T02:02:58Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T23:04:55Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T21:10:00Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-14T15:53:35Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T16:04:15Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T15:25:54Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T09:42:01Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T08:10:18Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T00:32:07Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T20:02:22Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T13:27:16Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T11:48:42Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T08:22:21Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T16:28:29Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T15:41:55Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T14:54:32Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T14:38:41Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T12:12:23Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-08","deployed_at":"2026-09-08T23:22:15Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-08","deployed_at":"2026-09-08T13:51:41Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-04","deployed_at":"2026-09-04T21:13:11Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-04","deployed_at":"2026-09-04T20:47:05Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-04","deployed_at":"2026-09-04T13:19:08Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T20:10:12Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T20:05:30Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T20:00:14Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T18:55:20Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T18:26:58Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T19:48:54Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T19:44:54Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T14:17:19Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T15:37:12Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T13:39:30Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T15:58:14Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-06","deployed_at":"2026-08-06T21:25:45Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:34:58Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:07:05Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T16:51:06Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T16:29:11Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T14:59:04Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T14:11:13Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T14:58:14Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-08-31","deployed_at":"2026-08-31T18:26:58Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T17:52:41Z"},{"org":"Banner","app":"AUC","pipeline":"AUC-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-14T19:23:15Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T17:56:25Z"},{"org":"Banner","app":"WU","pipeline":"WU-Release-Pipeline","tier":"PROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T17:48:06Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T17:04:24Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-28","deployed_at":"2026-09-28T18:04:20Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-28","deployed_at":"2026-09-28T13:52:07Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-24","deployed_at":"2026-09-24T12:24:49Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T21:17:54Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T12:40:55Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-23","deployed_at":"2026-09-23T11:48:58Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T18:02:08Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T19:00:13Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T18:43:22Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T17:48:24Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T16:58:38Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T13:27:11Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T20:53:16Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T12:56:49Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T18:56:24Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T15:53:39Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T20:26:37Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T19:56:01Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T19:34:09Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T18:39:34Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T16:51:01Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T14:11:11Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T13:53:10Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T15:43:30Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T15:29:14Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T13:34:59Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-09","deployed_at":"2026-09-09T12:11:14Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-08","deployed_at":"2026-09-08T15:12:17Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-08","deployed_at":"2026-09-08T11:36:36Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-07","deployed_at":"2026-09-07T17:40:53Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-04","deployed_at":"2026-09-04T17:18:28Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-04","deployed_at":"2026-09-04T15:00:48Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T18:15:21Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T17:46:22Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T17:44:59Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T17:22:32Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T17:19:43Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T16:54:07Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-03","deployed_at":"2026-09-03T15:07:53Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T15:04:50Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T13:40:23Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-02","deployed_at":"2026-09-02T02:34:35Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T19:22:48Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T15:21:18Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T15:06:24Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T14:03:12Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T13:20:35Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T12:52:53Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T08:33:45Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-31","deployed_at":"2026-08-31T14:46:28Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-28","deployed_at":"2026-08-28T20:20:41Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-28","deployed_at":"2026-08-28T16:48:36Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-28","deployed_at":"2026-08-28T16:19:52Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-28","deployed_at":"2026-08-28T16:06:41Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-28","deployed_at":"2026-08-28T13:48:55Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T21:51:13Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T16:13:08Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T15:36:20Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-26","deployed_at":"2026-08-26T16:30:52Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-26","deployed_at":"2026-08-26T16:11:33Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T17:01:12Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-07-20","deployed_at":"2026-07-20T21:06:49Z"},{"org":"Banner","app":"CU","pipeline":"CU-Release-Pipeline-nprod","tier":"NPROD","kind":"CD","day":"2026-07-20","deployed_at":"2026-07-20T20:24:09Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T16:45:46Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T16:30:59Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T15:34:47Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:35:23Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:10:12Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-28","deployed_at":"2026-09-28T07:11:06Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-24","deployed_at":"2026-09-24T11:40:01Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-09-23","deployed_at":"2026-09-23T13:17:21Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T10:20:11Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-build","tier":"UNTAGGED","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T06:56:10Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T15:19:51Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:11:35Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:21:27Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:44:23Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:44:01Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:02:51Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T11:35:01Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T13:29:18Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T10:32:31Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T10:10:50Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-18","deployed_at":"2026-09-18T07:41:42Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T11:37:04Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T09:44:04Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T07:09:29Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T11:25:50Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T09:50:35Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T08:45:54Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T06:39:07Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T06:37:26Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-14","deployed_at":"2026-09-14T08:12:44Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-11","deployed_at":"2026-09-11T17:40:36Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-11","deployed_at":"2026-09-11T13:15:03Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-10","deployed_at":"2026-09-10T06:40:50Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T16:13:06Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-08","deployed_at":"2026-09-08T18:33:37Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-25","deployed_at":"2026-08-25T07:33:09Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-25","deployed_at":"2026-08-25T07:17:37Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-24","deployed_at":"2026-08-24T13:00:28Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-24","deployed_at":"2026-08-24T10:56:12Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-24","deployed_at":"2026-08-24T08:56:48Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-24","deployed_at":"2026-08-24T06:16:52Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-13","deployed_at":"2026-08-13T14:10:19Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-16","deployed_at":"2026-07-16T15:07:18Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-16","deployed_at":"2026-07-16T08:56:45Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-15","deployed_at":"2026-07-15T07:37:08Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T13:19:25Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T10:40:15Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T10:10:43Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-10","deployed_at":"2026-07-10T08:23:11Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-06","deployed_at":"2026-07-06T13:38:57Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T11:11:03Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-21","deployed_at":"2026-09-21T09:38:15Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T14:16:12Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-11","deployed_at":"2026-08-11T14:47:02Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-11","deployed_at":"2026-08-11T14:46:14Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T12:59:46Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T07:29:47Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T07:12:33Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-15","deployed_at":"2026-07-15T11:21:42Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-15","deployed_at":"2026-07-15T09:22:22Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T16:43:38Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T16:15:24Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-10","deployed_at":"2026-07-10T12:47:13Z"},{"org":"APG","app":"Functions","pipeline":"APG-Functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-07","deployed_at":"2026-07-07T08:47:35Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:36:20Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:03:51Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:59:00Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:40:36Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:28:59Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:00:02Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T13:00:10Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T13:37:11Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T08:15:27Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T12:05:58Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T10:46:18Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T07:46:09Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T10:00:57Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T09:50:01Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T07:14:44Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-15T06:11:55Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-14T08:24:22Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T17:45:53Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-11","deployed_at":"2026-09-11T13:30:32Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T07:27:49Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T10:19:00Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T09:06:58Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T08:48:48Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-19","deployed_at":"2026-08-19T09:48:11Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T15:22:46Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T09:27:27Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-15","deployed_at":"2026-07-15T08:36:58Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T13:38:13Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T10:55:25Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T10:23:02Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-10","deployed_at":"2026-07-10T09:55:37Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-06","deployed_at":"2026-07-06T17:05:15Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:49:50Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:36:37Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T15:07:55Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:39:21Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:35:51Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T14:05:14Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-29","deployed_at":"2026-09-29T12:58:44Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-22","deployed_at":"2026-09-22T13:39:47Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-18","deployed_at":"2026-09-18T08:13:06Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T10:28:50Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-16","deployed_at":"2026-09-16T07:36:08Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T09:51:47Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-15","deployed_at":"2026-09-15T09:41:49Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-15T06:11:24Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-14","deployed_at":"2026-09-14T08:21:14Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-10","deployed_at":"2026-09-10T07:23:06Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-09-01","deployed_at":"2026-09-01T08:00:44Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T08:39:29Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T08:18:42Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-20","deployed_at":"2026-08-20T07:16:59Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-19","deployed_at":"2026-08-19T09:44:36Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T15:22:17Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-16","deployed_at":"2026-07-16T09:16:27Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-15","deployed_at":"2026-07-15T08:37:35Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T13:35:08Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T10:48:41Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-13","deployed_at":"2026-07-13T09:53:32Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-10","deployed_at":"2026-07-10T08:43:05Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-06","deployed_at":"2026-07-06T17:00:04Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:49:41Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:28:06Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T14:15:14Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:58:59Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:53:07Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T13:02:22Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T11:51:01Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-29","deployed_at":"2026-09-29T11:39:45Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T14:22:00Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T13:28:37Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-21","deployed_at":"2026-09-21T10:24:07Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-18","deployed_at":"2026-09-18T07:32:01Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T11:31:03Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T09:36:03Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-16","deployed_at":"2026-09-16T06:44:49Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T11:13:19Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T09:39:56Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T08:26:08Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-15","deployed_at":"2026-09-15T08:16:50Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-14","deployed_at":"2026-09-14T08:12:18Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-14","deployed_at":"2026-09-14T07:39:23Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-14","deployed_at":"2026-09-14T06:33:57Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-10","deployed_at":"2026-09-10T06:39:48Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T16:11:05Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-03","deployed_at":"2026-09-03T14:04:41Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-01","deployed_at":"2026-09-01T07:49:32Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:38:02Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:37:00Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:34:17Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:32:59Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:30:46Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:29:01Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:27:51Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:27:12Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:23:54Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:22:52Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:21:17Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T08:05:45Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-13","deployed_at":"2026-08-13T13:45:52Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-17","deployed_at":"2026-07-17T10:26:00Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-16","deployed_at":"2026-07-16T15:01:37Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-16","deployed_at":"2026-07-16T08:48:31Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-15","deployed_at":"2026-07-15T07:11:25Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T13:14:39Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T10:38:14Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-13","deployed_at":"2026-07-13T09:38:10Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-10","deployed_at":"2026-07-10T08:14:27Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-06","deployed_at":"2026-07-06T16:46:04Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-06","deployed_at":"2026-07-06T13:36:11Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-24","deployed_at":"2026-08-24T16:06:11Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T07:06:28Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T07:05:29Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T07:05:23Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T07:03:09Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T06:48:57Z"},{"org":"APG","app":"Portal","pipeline":"APG-Portal-build","tier":"PROD","kind":"CI","day":"2026-08-21","deployed_at":"2026-08-21T06:37:56Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build","tier":"PROD","kind":"CI","day":"2026-08-25","deployed_at":"2026-08-25T16:35:23Z"},{"org":"APG","app":"Microapps","pipeline":"APG-Microapps-build","tier":"PROD","kind":"CI","day":"2026-08-25","deployed_at":"2026-08-25T14:23:22Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T17:00:16Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T16:23:04Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-26","deployed_at":"2026-08-26T17:34:38Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T13:28:07Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-12","deployed_at":"2026-08-12T07:45:54Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-11","deployed_at":"2026-08-11T11:45:08Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T08:34:28Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T08:38:06Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T08:30:41Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T08:03:52Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T07:59:46Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T07:53:31Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-04","deployed_at":"2026-08-04T07:32:53Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-07","deployed_at":"2026-07-07T12:32:49Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T17:30:28Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-27","deployed_at":"2026-08-27T16:51:11Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-18","deployed_at":"2026-08-18T13:53:20Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-17","deployed_at":"2026-08-17T14:13:13Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-12","deployed_at":"2026-08-12T13:05:45Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-12","deployed_at":"2026-08-12T12:17:43Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-10","deployed_at":"2026-08-10T14:23:38Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-10","deployed_at":"2026-08-10T13:26:57Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-08-10","deployed_at":"2026-08-10T12:06:43Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-22","deployed_at":"2026-07-22T17:13:53Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-08","deployed_at":"2026-07-08T14:36:15Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-08","deployed_at":"2026-07-08T12:32:05Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-release-nprod","tier":"NPROD","kind":"CD","day":"2026-07-07","deployed_at":"2026-07-07T12:39:25Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T13:08:44Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-09-01","deployed_at":"2026-09-01T07:28:38Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T16:58:38Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T16:40:01Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T15:51:48Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-26","deployed_at":"2026-08-26T10:27:58Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-13","deployed_at":"2026-08-13T11:25:47Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T14:12:42Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T13:21:08Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T11:51:42Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T11:14:34Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T10:11:21Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-10","deployed_at":"2026-08-10T09:06:33Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-08-03","deployed_at":"2026-08-03T10:12:01Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-07-08","deployed_at":"2026-07-08T14:26:16Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-07-08","deployed_at":"2026-07-08T12:22:12Z"},{"org":"Financial Aid","app":"Functions","pipeline":"finaid-functions-build","tier":"PROD","kind":"CI","day":"2026-07-07","deployed_at":"2026-07-07T12:32:30Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build","tier":"PROD","kind":"CI","day":"2026-08-03","deployed_at":"2026-08-03T08:55:53Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-22","deployed_at":"2026-09-22T14:20:42Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-09-09","deployed_at":"2026-09-09T15:41:30Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-31","deployed_at":"2026-08-31T17:47:20Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-31","deployed_at":"2026-08-31T17:36:22Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T16:42:33Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T16:24:36Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-27","deployed_at":"2026-08-27T15:51:29Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-26","deployed_at":"2026-08-26T10:43:19Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-26","deployed_at":"2026-08-26T10:27:26Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-11","deployed_at":"2026-08-11T14:53:48Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-11","deployed_at":"2026-08-11T11:53:52Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-08-11","deployed_at":"2026-08-11T11:37:01Z"},{"org":"Financial Aid","app":"Microapps","pipeline":"finaid-microapps-build-nprod","tier":"NPROD","kind":"CI","day":"2026-07-07","deployed_at":"2026-07-07T12:26:33Z"}] };
+/* Minimal runtime standing in for the Claude dashboard host. */
+window.dash = (() => {
+  const raw = window.DORA_DATA, calcs = {}, cache = {}, subs = [];
+  let qs; try { qs = new URLSearchParams(location.search); } catch (e) { qs = new URLSearchParams(); }
+  let params = { org: qs.get('org') || 'All' };
+  const data = (id) => {
+    if (cache[id]) return cache[id];
+    let rows;
+    if (raw[id]) rows = raw[id];
+    else if (calcs[id]) rows = calcs[id].fn(...calcs[id].inputs.map((i) => data(i).data));
+    else return { status: 'missing', data: [] };
+    return (cache[id] = { status: 'ok', data: rows });
+  };
+  const run = () => subs.forEach((fn) => fn());
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 150); });
+  return {
+    data, calc: (id, def) => { calcs[id] = def; },
+    onData: (fn) => { subs.push(fn); fn(); },
+    params: () => ({ ...params }),
+    setParams: (p) => {
+      params = { ...params, ...p };
+      try {
+        const u = new URL(location.href);
+        if (params.org && params.org !== 'All') u.searchParams.set('org', params.org); else u.searchParams.delete('org');
+        history.replaceState(null, '', u);
+      } catch (e) { /* sandboxed previews (about:srcdoc) can't change the URL; the page still works */ }
+      run();
+    },
+    resetParams: () => { params = { org: 'All' }; run(); },
+    setLink: () => {},
+    colors: ['#3b6fd8', '#8aa3c8', '#c9773a', '#5a9e6f', '#a35fb5', '#c25b67', '#6a8f9e', '#b39a3c']
+  };
+})();
+</script>
+<style>
+#dash-root { --dash-gutter: clamp(16px, 3vw, 40px); }
+.dr { font-family: var(--font-anthropic-sans); color: var(--color-fg); max-width: 1200px; margin-inline: auto; display: grid; gap: var(--cds-gap-xl); }
+.dr-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
+.dr-head p { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); max-width: 62rem; }
+.dr-head .dr-take { color: var(--color-fg); margin-top: var(--cds-gap-sm); }
+.dr-take b, .dr-tile b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.dr h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs); }
+.dr-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0 0 var(--cds-gap-md); }
+.dr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--cds-gap-md); }
+.dr-grid-wide { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); }
+.dr-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); position: relative; min-width: 0; }
+.dr-tile h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.dr-tile .dr-def { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 2px 0 var(--cds-gap-md); min-height: 2.6em; }
+.dr-row { display: grid; grid-template-columns: 4.5rem 1fr auto; align-items: baseline; gap: var(--cds-gap-sm); padding: var(--cds-pad-xs) 0; border-top: 1px solid var(--color-border-line); }
+.dr-row .lbl { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.dr-row .val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.dr-row .val.sm { font-size: var(--cds-font-size-heading); }
+.dr-row .sub { grid-column: 2 / 4; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin-top: -2px; }
+.dr-badge { font-size: var(--cds-font-size-caption); border: 1px solid currentColor; border-radius: 999px; padding: 0 var(--cds-pad-sm); white-space: nowrap; }
+.dr-badge[data-r="Elite"], .dr-badge[data-r="High"] { color: var(--color-ok); }
+.dr-badge[data-r="Medium"] { color: var(--color-warn); }
+.dr-badge[data-r="Low"] { color: var(--color-bad); }
+.dr-badge[data-r="n/a"] { color: var(--color-fg-muted); }
+.dr-chart { min-height: 240px; }
+.dr-mini { min-height: 96px; }
+.dr-mini-head { display: flex; justify-content: space-between; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); margin-bottom: var(--cds-gap-xs); }
+.dr-mini-head .n { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dr-mini-head .t { font-weight: var(--cds-font-weight-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-legend { display: flex; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); flex-wrap: wrap; }
+.dr-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.dr-tip { position: absolute; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); pointer-events: none; white-space: nowrap; z-index: 5; display: none; }
+.dr-tip .d { color: var(--cds-text-secondary); }
+.dr-pick { display: flex; align-items: center; gap: var(--cds-gap-sm); flex-wrap: wrap; margin-bottom: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.dr-pick select { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); max-width: 100%; }
+.dr-pp .dr-row { grid-template-columns: 1fr auto; border-top: 0; padding-top: 0; }
+.dr-pp .dr-row .sub { grid-column: 1 / 3; }
+.dr-table tbody tr { cursor: pointer; }
+.dr-table tbody tr.sel td { background: var(--cds-surface-popover); }
+.dr-table td .dr-badge { display: inline-block; }
+.dr-tablebox { max-height: 30rem; overflow: auto; }
+.dr-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.dr-table th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.dr-table td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.dr-table th:first-child, .dr-table td:first-child, .dr-table th.l, .dr-table td.l { text-align: left; }
+.dr-table td.warn { color: var(--color-warn); }
+.dr-caveats { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-body); }
+.dr-caveats li b { font-weight: 600; }
+.dr-fail { display: flex; align-items: center; justify-content: center; gap: 8px; height: 100%; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.dr-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+@media (max-width: 640px) { .dr-hide-narrow { display: none; } }
+</style>
+<style>
+.dr-orgs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); margin-top: var(--cds-gap-md); }
+.dr-orgs button { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; padding: var(--cds-pad-xs) var(--cds-pad-md); cursor: pointer; }
+.dr-orgs button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+.dr-tile .dr-row { grid-template-columns: 6.5rem 1fr auto; }
+.dr-tile .dr-row .val.na { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); font-family: var(--font-anthropic-sans); }
+.dr-orgnote[hidden] { display: none; }
+#cmp-sec[hidden] { display: none; }
+.dr-table tbody tr.cur td { background: var(--cds-surface-popover); }
+</style>
+
+<div class="dr">
+  <header class="dr-head" id="top">
+    <h1>Covista DORA metrics · Q3 2026</h1>
+    <p>Harness orgs Banner, APG and Financial Aid · project Build_Deploy · Jul 1 – Sep 30, 2026</p>
+    <div class="dr-orgs" id="org-picker" role="group" aria-label="Org" data-source="pipelines"></div>
+    <p class="dr-take" id="takeaway" data-source="tier_rollup"></p>
+  </header>
+
+  <section id="tiles">
+    <h2 id="tiles-title">The four DORA metrics</h2>
+    <p class="dr-note">Pipelines grouped into prod releases, non-prod releases and CI builds. Rated on the bands under Caveats; frequency is rated per pipeline.</p>
+    <div class="dr-grid" id="tile-grid"></div>
+  </section>
+
+  <section id="cmp-sec">
+    <div class="dr-card">
+      <h2>Orgs side by side</h2>
+      <p class="dr-note">Each org's groups with the same metrics. Pick an org above to focus the page on it.</p>
+      <div class="dr-tablebox">
+        <table class="dr-table" id="cmp-table" data-source="tier_rollup" data-row-key="org,group">
+          <thead><tr>
+            <th data-field="org">Org</th>
+            <th class="l" data-field="group">Group</th>
+            <th data-field="pipelines">Pipelines</th>
+            <th data-field="dpw_display">Per week</th>
+            <th class="l" data-field="df_rating">Freq.</th>
+            <th data-field="lead_time_display">Lead time</th>
+            <th class="l" data-field="lt_rating">Lead</th>
+            <th data-field="cfr_display">Failure rate</th>
+            <th class="l" data-field="cfr_rating">CFR</th>
+            <th data-field="mttr_display">MTTR</th>
+            <th class="l" data-field="mttr_rating">MTTR</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="pipeline-dora">
+    <h2>DORA metrics for one pipeline</h2>
+    <p class="dr-note">Pick a pipeline from the selected org, or click its row in the table below.</p>
+    <div class="dr-pick"><label for="pp-select">Pipeline</label><select id="pp-select"></select><span id="pp-meta"></span></div>
+    <div class="dr-grid dr-pp">
+      <div class="dr-card dr-tile">
+        <h3>Deployment frequency</h3>
+        <p class="dr-def">Successful runs per week over the quarter.</p>
+        <div class="dr-row"><span class="val dash-skeleton pp" data-source="pipeline_view" data-field="deploys_per_week">—</span><span class="dr-badge pp" data-source="pipeline_view" data-field="df_rating"></span>
+          <span class="sub">per week · <span class="pp" data-source="pipeline_view" data-field="deployments">—</span> runs on <span class="pp" data-source="pipeline_view" data-field="deploy_days">—</span> days, <span class="pp" data-source="pipeline_view" data-field="first_deploy">—</span> to <span class="pp" data-source="pipeline_view" data-field="last_deploy">—</span></span></div>
+      </div>
+      <div class="dr-card dr-tile">
+        <h3>Lead time for changes</h3>
+        <p class="dr-def">Mean commit to successful run.</p>
+        <div class="dr-row"><span class="val sm dash-skeleton pp" data-source="pipeline_view" data-field="lead_time_display">—</span><span class="dr-badge pp" data-source="pipeline_view" data-field="lt_rating"></span>
+          <span class="sub">Measured from <span class="pp" data-source="pipeline_view" data-field="lead_time_source">—</span></span></div>
+      </div>
+      <div class="dr-card dr-tile">
+        <h3>Change failure rate</h3>
+        <p class="dr-def">Failed runs as a share of all runs.</p>
+        <div class="dr-row"><span class="val dash-skeleton pp" data-source="pipeline_view" data-field="cfr">—</span><span class="dr-badge pp" data-source="pipeline_view" data-field="cfr_rating"></span>
+          <span class="sub"><span class="pp" data-source="pipeline_view" data-field="failures">—</span> failed of <span class="pp" data-source="pipeline_view" data-field="executions">—</span> runs</span></div>
+      </div>
+      <div class="dr-card dr-tile">
+        <h3>Time to restore (MTTR)</h3>
+        <p class="dr-def">Mean time from a failed run to the next successful run.</p>
+        <div class="dr-row"><span class="val sm dash-skeleton pp" data-source="pipeline_view" data-field="mttr_display">—</span><span class="dr-badge pp" data-source="pipeline_view" data-field="mttr_rating"></span>
+          <span class="sub"><span class="pp" data-source="pipeline_view" data-field="recoveries">—</span> recoveries · range <span class="pp" data-source="pipeline_view" data-field="mttr_range_display">—</span> · <span class="pp" data-source="pipeline_view" data-field="unmatched_failures">—</span> failures never recovered</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trend">
+    <div class="dr-card">
+      <h2>Weekly successful runs</h2>
+      <p class="dr-note">Successful runs per week by group (weeks start Monday), for the selected org.</p>
+      <div class="dr-legend"><span><i class="sw0"></i>Prod release</span><span><i class="sw1"></i>Non-prod release</span><span><i class="sw2"></i>CI builds</span></div>
+      <div class="dr-chart dash-skeleton" id="chart-weekly" data-source="weekly_group"></div>
+    </div>
+  </section>
+
+  <section id="per-pipeline">
+    <h2>Per-pipeline trends</h2>
+    <p class="dr-note">Successful runs per week for each pipeline in the selected org, on one shared scale.</p>
+    <div class="dr-grid" id="minis" data-source="weekly"></div>
+  </section>
+
+  <section id="funnel-sec">
+    <div class="dr-card">
+      <h2>Non-prod to prod releases, by app</h2>
+      <p class="dr-note">Successful non-prod release deploys against prod release deploys. Zero prod means no prod release pipeline in Harness for that app yet, or releases that are gated or run elsewhere.</p>
+      <div class="dr-chart dash-skeleton" id="chart-funnel" data-source="funnel" style="min-height: 120px"></div>
+    </div>
+  </section>
+
+  <section id="table-sec">
+    <div class="dr-card">
+      <h2>All pipelines</h2>
+      <p class="dr-note">Raw API figures per pipeline in the selected org. Lead time in amber is pipeline runtime, not commit-to-deploy. Click a row to see it above.</p>
+      <div class="dr-tablebox">
+        <table class="dr-table" id="ptable" data-source="pipeline_view" data-row-key="pipeline">
+          <thead><tr>
+            <th data-field="pipeline">Pipeline</th>
+            <th class="l" data-field="org">Org</th>
+            <th class="l" data-field="tier">Tier</th>
+            <th class="l dr-hide-narrow" data-field="kind">Type</th>
+            <th data-field="executions">Runs</th>
+            <th data-field="deployments">Deploys</th>
+            <th data-field="deploys_per_week">Per week</th>
+            <th data-field="cfr">Failure rate</th>
+            <th data-field="lead_time_display">Lead time</th>
+            <th data-field="mttr_display">MTTR</th>
+            <th class="l" data-field="df_rating">Freq.</th>
+            <th class="l" data-field="lt_rating">Lead</th>
+            <th class="l" data-field="cfr_rating">CFR</th>
+            <th class="l" data-field="mttr_rating">MTTR</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="caveats">
+    <div class="dr-card">
+      <h2>Caveats and how to read this</h2>
+      <ul class="dr-caveats">
+        <li><b>Release lead time isn't measured.</b> Release runs are triggered manually with no commit metadata, so the API reports pipeline runtime instead. Only CI builds carry commit timestamps. Fix: pass the build's commit SHA and commit time into each release pipeline as variables.</li>
+        <li><b>MTTR is an approximation.</b> It measures a failed run to the next successful run on the same pipeline, not incident detection to service restored. A failed run left unretried for days shows up as a long "recovery" and pulls the mean up.</li>
+        <li><b>Non-prod isn't production.</b> DORA is defined against production. Non-prod releases and CI builds are shown as delivery health, not as DORA scores to benchmark. Only Banner has prod release pipelines in this data.</li>
+        <li><b>CI builds are not deployments.</b> Their "deploys" are successful builds and their failure rate is build failures, so they are kept apart from the release groups.</li>
+        <li class="dr-orgnote" data-org="Banner"><b>Banner:</b> prod releases through Harness began <span data-source="tier_rollup" data-where="org=Banner&amp;group=Prod release" data-field="first_deploy_display">—</span>, so quarter-wide prod rates understate the current pace. CU-Release-Pipeline's longest recovery, <span data-source="pipeline_view" data-where="pipeline=CU-Release-Pipeline" data-field="mttr_max_display">—</span>, was an unretried failure, not an outage.</li>
+        <li class="dr-orgnote" data-org="APG"><b>APG:</b> failures concentrate in the Functions pipelines; APG-Functions-release-nprod has <span data-source="pipeline_view" data-where="pipeline=APG-Functions-release-nprod" data-field="unmatched_failures">—</span> failures never followed by a success. APG-Functions-build has no tier tag in Harness, and the prod build pipelines only ran in late August.</li>
+        <li class="dr-orgnote" data-org="Financial Aid"><b>Financial Aid:</b> activity mostly stops after August; the last successful release was <span data-source="pipeline_view" data-where="pipeline=finaid-functions-release-nprod" data-field="last_deploy">—</span>. finaid-functions-release-nprod fails most of its runs, with <span data-source="pipeline_view" data-where="pipeline=finaid-functions-release-nprod" data-field="unmatched_failures">—</span> failures never recovered.</li>
+        <li><b>Rating bands used.</b> Deployment frequency per pipeline: Elite above 7 a week, High 1 a week or more, Medium monthly or more, Low below. Lead time: Elite under a day, High under a week, Medium under a month. Change failure rate: Elite 5% or less, High 10% or less, Medium 15% or less, Low above. MTTR: Elite under an hour, High under a day, Medium under a week, Low a week or more.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+dash.calc('pipeline_view', {
+  title: 'Per-pipeline DORA metrics',
+  description: 'Each pipeline from the API exports with lead time and MTTR in minutes, hours or days, and a DORA rating per metric.',
+  inputs: ['pipelines'],
+  fn: (pipelines) => {
+    const num = (v) => (v === '' || v == null ? null : Number(v));
+    const dur = (h) => h == null ? 'Not measured' : h < 1 ? Math.round(h * 60) + ' min' : h < 48 ? h.toFixed(1) + ' h' : (h / 24).toFixed(1) + ' days';
+    const band = (v, cuts, asc) => v == null ? 'n/a' : asc
+      ? (v <= cuts[0] ? 'Elite' : v <= cuts[1] ? 'High' : v <= cuts[2] ? 'Medium' : 'Low')
+      : (v > cuts[0] ? 'Elite' : v >= cuts[1] ? 'High' : v >= cuts[2] ? 'Medium' : 'Low');
+    return pipelines.map((p) => {
+      const git = p.lead_time_source === 'git commit';
+      const lt = num(p.lead_time_hours);
+      const mt = Number(p.recoveries) > 0 ? num(p.mttr_hours) : null;
+      return {
+        pipeline: p.pipeline, org: p.org, app: p.app, tier: p.tier, kind: p.kind,
+        executions: Number(p.executions), deployments: Number(p.deployments), failures: Number(p.failures),
+        deploys_per_week: Number(p.deploys_per_week), cfr: Number(p.cfr),
+        lead_time_display: git ? dur(lt) : dur(lt) + ' runtime', lead_time_is_runtime: !git,
+        lead_time_source: git ? 'git commit time' : 'pipeline start (no commit data, so this is runtime)',
+        mttr_display: mt == null ? 'No recoveries' : dur(mt),
+        mttr_max_display: mt == null ? '—' : dur(num(p.mttr_max_hours)),
+        mttr_range_display: mt == null ? '—' : dur(num(p.mttr_min_hours)) + ' to ' + dur(num(p.mttr_max_hours)),
+        recoveries: Number(p.recoveries), unmatched_failures: Number(p.unmatched_failures),
+        first_deploy: p.first_deploy, last_deploy: p.last_deploy, deploy_days: Number(p.deploy_days),
+        df_rating: band(Number(p.deploys_per_week), [7, 1, 12 / 52], false),
+        lt_rating: git ? band(lt, [24, 168, 720], true) : 'n/a',
+        cfr_rating: band(Number(p.cfr), [0.05, 0.10, 0.15], true),
+        mttr_rating: band(mt, [1, 24, 168], true)
+      };
+    });
+  }
+});
+
+dash.calc('tier_rollup', {
+  title: 'DORA rollup by org and group',
+  description: 'For each org and for all orgs together: prod releases, non-prod releases and CI builds, with the four metrics and DORA ratings.',
+  inputs: ['pipelines', 'deployments'],
+  fn: (pipelines, deployments) => {
+    const num = (v) => (v === '' || v == null ? null : Number(v));
+    const dur = (h) => h == null ? 'Not measured' : h < 1 ? Math.round(h * 60) + ' min' : h < 48 ? h.toFixed(1) + ' h' : (h / 24).toFixed(1) + ' days';
+    const band = (v, cuts, asc) => v == null ? 'n/a' : asc
+      ? (v <= cuts[0] ? 'Elite' : v <= cuts[1] ? 'High' : v <= cuts[2] ? 'Medium' : 'Low')
+      : (v > cuts[0] ? 'Elite' : v >= cuts[1] ? 'High' : v >= cuts[2] ? 'Medium' : 'Low');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const inGroup = { 'Prod release': (r) => r.kind === 'CD' && r.tier === 'PROD', 'Non-prod release': (r) => r.kind === 'CD' && r.tier !== 'PROD', 'CI builds': (r) => r.kind === 'CI' };
+    const orgs = ['All', ...new Set(pipelines.map((p) => p.org))];
+    const out = [];
+    orgs.forEach((org) => Object.keys(inGroup).forEach((group) => {
+      const ps = pipelines.filter((p) => (org === 'All' || p.org === org) && inGroup[group](p));
+      const ds = deployments.filter((d) => (org === 'All' || d.org === org) && inGroup[group](d));
+      if (!ps.length) {
+        out.push({ org, group, pipelines: 0, executions: 0, deployments: 0, failures: 0, dpw_display: 'No pipelines', df_rating: 'n/a', deploy_days: 0,
+          first_deploy_display: '—', lead_time_display: 'No pipelines', lt_rating: 'n/a', cfr_display: 'No pipelines', cfr_rating: 'n/a',
+          recoveries: 0, mttr_display: 'No pipelines', mttr_fastest_display: '—', mttr_rating: 'n/a' });
+        return;
+      }
+      const sum = (k) => ps.reduce((a, p) => a + Number(p[k]), 0);
+      const executions = sum('executions'), dep = sum('deployments'), failures = executions - dep;
+      const perWeek = dep / 91 * 7;
+      const rec = ps.filter((p) => Number(p.recoveries) > 0 && num(p.mttr_hours) != null);
+      const recoveries = rec.reduce((a, p) => a + Number(p.recoveries), 0);
+      const mttr = recoveries ? rec.reduce((a, p) => a + Number(p.mttr_hours) * Number(p.recoveries), 0) / recoveries : null;
+      const fastest = rec.length ? Math.min(...rec.map((p) => Number(p.mttr_min_hours))) : null;
+      const git = ps.filter((p) => p.lead_time_source === 'git commit');
+      const lt = git.length ? git.reduce((a, p) => a + Number(p.lead_time_hours) * Number(p.deployments), 0) / git.reduce((a, p) => a + Number(p.deployments), 0) : null;
+      const days = [...new Set(ds.map((d) => d.day))].sort();
+      const f = days[0];
+      const cfr = executions ? failures / executions : null;
+      out.push({
+        org, group, pipelines: ps.length, executions, deployments: dep, failures, deploy_days: days.length,
+        dpw_display: perWeek.toFixed(1), df_rating: band(perWeek / ps.length, [7, 1, 12 / 52], false),
+        first_deploy_display: f ? months[Number(f.slice(5, 7)) - 1] + ' ' + Number(f.slice(8, 10)) : '—',
+        lead_time_display: dur(lt), lt_rating: band(lt, [24, 168, 720], true),
+        cfr_display: cfr == null ? '—' : (cfr * 100).toFixed(1) + '%', cfr_rating: band(cfr, [0.05, 0.10, 0.15], true),
+        recoveries, mttr_display: mttr == null ? 'No recoveries' : dur(mttr), mttr_fastest_display: dur(fastest), mttr_rating: band(mttr, [1, 24, 168], true)
+      });
+    }));
+    return out;
+  }
+});
+
+dash.calc('weekly', {
+  title: 'Runs per pipeline per week',
+  description: 'Successful runs counted per pipeline per Monday-start week, Jun 29 to Sep 28, including empty weeks.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const mon = (day) => { const d = new Date(day + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - (d.getUTCDay() + 6) % 7); return d.toISOString().slice(0, 10); };
+    const weeks = []; const w0 = new Date('2026-06-29T00:00:00Z');
+    for (let i = 0; i < 14; i++) { const d = new Date(w0); d.setUTCDate(d.getUTCDate() + 7 * i); weeks.push(d.toISOString().slice(0, 10)); }
+    const pipes = new Map();
+    deployments.forEach((d) => { if (!pipes.has(d.pipeline)) pipes.set(d.pipeline, { org: d.org, tier: d.tier, kind: d.kind }); });
+    const counts = new Map();
+    deployments.forEach((d) => { const k = d.pipeline + '|' + mon(d.day); counts.set(k, (counts.get(k) || 0) + 1); });
+    const out = [];
+    pipes.forEach((m, p) => weeks.forEach((w) => out.push({ pipeline: p, org: m.org, tier: m.tier, kind: m.kind, week: w, deployments: counts.get(p + '|' + w) || 0 })));
+    return out;
+  }
+});
+
+dash.calc('weekly_group', {
+  title: 'Runs per week by org and group',
+  description: 'Weekly successful prod-release, non-prod-release and CI-build runs for each org and for all orgs, from the per-pipeline weekly counts.',
+  inputs: ['weekly'],
+  fn: (weekly) => {
+    const m = new Map();
+    weekly.forEach((r) => ['All', r.org].forEach((org) => {
+      const k = org + '|' + r.week;
+      const o = m.get(k) || { org, week: r.week, prod: 0, nprod: 0, ci: 0 };
+      if (r.kind === 'CI') o.ci += r.deployments; else if (r.tier === 'PROD') o.prod += r.deployments; else o.nprod += r.deployments;
+      m.set(k, o);
+    }));
+    return [...m.values()].sort((a, b) => a.week < b.week ? -1 : 1);
+  }
+});
+
+dash.calc('funnel', {
+  title: 'Non-prod vs prod releases by app',
+  description: 'Successful release deploys per org and app in non-prod and prod, and the prod-to-non-prod ratio.',
+  inputs: ['pipelines'],
+  fn: (pipelines) => {
+    const cd = pipelines.filter((p) => p.kind === 'CD');
+    const keys = [...new Set(cd.map((p) => p.org + '|' + p.app))];
+    return keys.map((k) => {
+      const [org, app] = k.split('|');
+      const get = (prod) => cd.filter((p) => p.org === org && p.app === app && (p.tier === 'PROD') === prod).reduce((a, p) => a + Number(p.deployments), 0);
+      const nprod = get(false), prod = get(true);
+      return { org, app, nprod, prod, ratio: nprod ? Math.round(prod / nprod * 1000) / 1000 : null };
+    });
+  }
+});
+
+(() => {
+  const fmtPct = d3.format('.1%');
+  const fmtWeek = d3.utcFormat('%b %-d');
+  const fmtNum = d3.format(',');
+  const P = (s) => new Date(s + 'T00:00:00Z');
+  const enc = (v) => String(v).replace(/%/g, '%25').replace(/&/g, '%26').replace(/=/g, '%3D');
+  const tierLabel = (t) => t === 'PROD' ? 'Prod' : t === 'NPROD' ? 'Non-prod' : 'Untagged';
+  const groupOf = (r) => r.kind === 'CI' ? 2 : r.tier === 'PROD' ? 0 : 1;
+  const GROUPS = ['Prod release', 'Non-prod release', 'CI builds'];
+  ['sw0', 'sw1', 'sw2'].forEach((c, i) => document.querySelectorAll('.' + c).forEach((e) => e.style.background = dash.colors[i]));
+
+  // Build the tile grid once
+  const METRICS = [
+    { id: 'df', title: 'Deployment frequency', def: 'Successful runs per week, summed across the group. Rated on the per-pipeline average.', field: 'dpw_display', rating: 'df_rating', sub: (g) => [['deployments', ' runs on '], ['deploy_days', ' days']], small: false },
+    { id: 'lt', title: 'Lead time for changes', def: 'Commit to successful run. Only measured where runs carry commit timestamps.', field: 'lead_time_display', rating: 'lt_rating', small: true },
+    { id: 'cfr', title: 'Change failure rate', def: 'Failed runs as a share of all runs.', field: 'cfr_display', rating: 'cfr_rating', sub: () => [['failures', ' failed of '], ['executions', ' runs']], small: false },
+    { id: 'mttr', title: 'Time to restore (MTTR)', def: 'Mean time from a failed run to the next successful run of the same pipeline.', field: 'mttr_display', rating: 'mttr_rating', sub: () => [['recoveries', ' recoveries']], small: true }
+  ];
+  const grid = document.getElementById('tile-grid');
+  METRICS.forEach((m) => {
+    const card = document.createElement('div'); card.className = 'dr-card dr-tile'; card.id = 'tile-' + m.id;
+    const h = document.createElement('h3'); h.textContent = m.title;
+    const d = document.createElement('p'); d.className = 'dr-def'; d.textContent = m.def;
+    card.append(h, d);
+    GROUPS.forEach((g) => {
+      const row = document.createElement('div'); row.className = 'dr-row';
+      const lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = g;
+      const val = document.createElement('span'); val.className = 'val dash-skeleton tr' + (m.small ? ' sm' : ''); val.textContent = '—';
+      val.setAttribute('data-source', 'tier_rollup'); val.setAttribute('data-field', m.field); val.dataset.group = g;
+      const b = document.createElement('span'); b.className = 'dr-badge tr'; b.setAttribute('data-source', 'tier_rollup'); b.setAttribute('data-field', m.rating); b.dataset.group = g;
+      row.append(lbl, val, b);
+      if (m.sub) {
+        const sub = document.createElement('span'); sub.className = 'sub';
+        m.sub(g).forEach(([f, txt]) => {
+          const s = document.createElement('span'); s.className = 'tr'; s.setAttribute('data-source', 'tier_rollup'); s.setAttribute('data-field', f); s.dataset.group = g; s.textContent = '—';
+          sub.append(s, document.createTextNode(txt));
+        });
+        if (m.id === 'df') sub.insertBefore(document.createTextNode('per week · '), sub.firstChild);
+        row.appendChild(sub);
+      }
+      card.appendChild(row);
+    });
+    grid.appendChild(card);
+  });
+
+  const failed = (el) => { el.classList.remove('dash-skeleton'); el.innerHTML = ''; const d = document.createElement('div'); d.className = 'dr-fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+  const tipFor = (card) => { let t = card.querySelector(':scope > .dr-tip'); if (!t) { t = document.createElement('div'); t.className = 'dr-tip'; card.appendChild(t); } return t; };
+  const showTip = (card, ev, lines) => {
+    const t = tipFor(card); t.innerHTML = '';
+    lines.forEach(([txt, color, cls]) => { const div = document.createElement('div'); if (cls) div.className = cls; if (color) { const i = document.createElement('i'); i.style.cssText = `display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;background:${color}`; div.appendChild(i); } div.appendChild(document.createTextNode(txt)); t.appendChild(div); });
+    t.style.display = 'block';
+    const r = card.getBoundingClientRect();
+    let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+    if (x + t.offsetWidth > r.width - 4) x = ev.clientX - r.left - t.offsetWidth - 12;
+    if (y + t.offsetHeight > r.height - 4) y = ev.clientY - r.top - t.offsetHeight - 12;
+    t.style.left = Math.max(4, x) + 'px'; t.style.top = Math.max(4, y) + 'px';
+  };
+  const hideTip = (card) => { const t = card.querySelector(':scope > .dr-tip'); if (t) t.style.display = 'none'; };
+  const textW = (svg, s) => { const t = svg.append('text').attr('font-size', 12).text(s); const w = t.node().getComputedTextLength(); t.remove(); return w; };
+  const badge = (v) => { const b = document.createElement('span'); b.className = 'dr-badge'; b.setAttribute('data-r', v); b.textContent = v; return b; };
+
+  const curOrg = () => dash.params().org || 'All';
+  const inOrg = (r) => curOrg() === 'All' || r.org === curOrg();
+  let pick = null;
+
+  const render = () => {
+    const org = curOrg();
+    const pl = dash.data('pipelines');
+    const tr = dash.data('tier_rollup');
+    const pv = dash.data('pipeline_view');
+
+    // Org picker
+    const picker = document.getElementById('org-picker');
+    if (pl.status === 'ok') {
+      const orgs = ['All', ...new Set(pl.data.map((p) => p.org))];
+      if (picker.childElementCount !== orgs.length) {
+        picker.innerHTML = '';
+        orgs.forEach((o) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = o === 'All' ? 'All orgs' : o; b.dataset.org = o; b.addEventListener('click', () => { pick = null; dash.setParams({ org: o }); }); picker.appendChild(b); });
+      }
+      picker.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.org === org)));
+    }
+    document.getElementById('tiles-title').textContent = 'The four DORA metrics · ' + (org === 'All' ? 'all orgs' : org);
+    document.getElementById('cmp-sec').hidden = org !== 'All';
+    document.querySelectorAll('.dr-orgnote').forEach((li) => { li.hidden = !(org === 'All' || li.dataset.org === org); });
+
+    // Tiles
+    document.querySelectorAll('.tr[data-source="tier_rollup"]').forEach((el) => {
+      el.setAttribute('data-where', 'org=' + enc(org) + '&group=' + enc(el.dataset.group));
+      if (tr.status !== 'ok') { if (tr.status === 'error') { el.textContent = '—'; el.classList.remove('dash-skeleton'); } return; }
+      const r = tr.data.find((x) => x.org === org && x.group === el.dataset.group); if (!r) return;
+      const v = r[el.getAttribute('data-field')];
+      const s = typeof v === 'number' ? fmtNum(v) : String(v);
+      el.textContent = s; el.classList.remove('dash-skeleton');
+      if (el.classList.contains('dr-badge')) el.setAttribute('data-r', s);
+      if (el.classList.contains('val')) el.classList.toggle('na', r.pipelines === 0);
+    });
+
+    // Takeaway
+    const take = document.getElementById('takeaway');
+    if (tr.status === 'ok') {
+      take.innerHTML = '';
+      const rows = GROUPS.map((g) => tr.data.find((x) => x.org === org && x.group === g));
+      const mark = (r, field) => { const b = document.createElement('b'); b.setAttribute('data-source', 'tier_rollup'); b.setAttribute('data-where', 'org=' + enc(r.org) + '&group=' + enc(r.group)); b.setAttribute('data-field', field); b.textContent = typeof r[field] === 'number' ? fmtNum(r[field]) : r[field]; return b; };
+      take.append(document.createTextNode((org === 'All' ? 'Across all three orgs' : org) + ': '));
+      const parts = [];
+      rows.forEach((r, i) => {
+        if (!r || !r.pipelines) return;
+        const frag = document.createDocumentFragment();
+        frag.append(document.createTextNode((i === 2 ? 'CI builds' : GROUPS[i].toLowerCase()) + ' ran '), mark(r, 'dpw_display'), document.createTextNode(' a week with a '), mark(r, 'cfr_display'), document.createTextNode(' failure rate'));
+        parts.push(frag);
+      });
+      parts.forEach((f, i) => { if (i) take.append(document.createTextNode(i === parts.length - 1 ? '; and ' : '; ')); take.append(f); });
+      if (rows[0] && !rows[0].pipelines) take.append(document.createTextNode('. There are no prod release pipelines in this data for ' + org + ', so these are not production DORA scores.'));
+      else take.append(document.createTextNode('.'));
+    }
+
+    // Comparison table
+    const ctb = document.querySelector('#cmp-table tbody');
+    if (tr.status === 'ok') {
+      ctb.innerHTML = '';
+      tr.data.filter((r) => r.org !== 'All').forEach((r) => {
+        const row = document.createElement('tr'); row.setAttribute('data-key', enc(r.org).replace(/,/g, '%2C') + ',' + enc(r.group).replace(/,/g, '%2C'));
+        const cells = [[r.org, ''], [r.group, 'l'], [fmtNum(r.pipelines), ''], [r.dpw_display, ''], null, [r.lead_time_display, ''], null, [r.cfr_display, ''], null, [r.mttr_display, ''], null];
+        const ratings = [r.df_rating, r.lt_rating, r.cfr_rating, r.mttr_rating]; let ri = 0;
+        cells.forEach((c) => { const td = document.createElement('td'); if (c) { if (c[1]) td.className = c[1]; td.textContent = c[0]; } else { td.className = 'l'; td.appendChild(badge(ratings[ri++])); } row.appendChild(td); });
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', () => { pick = null; dash.setParams({ org: r.org }); });
+        ctb.appendChild(row);
+      });
+    }
+
+    // Pipeline picker + scorecard
+    if (pv.status === 'ok') {
+      const sel = document.getElementById('pp-select');
+      const rows = pv.data.filter(inOrg).sort((a, b) => d3.ascending(a.org, b.org) || (groupOf(a) - groupOf(b)) || d3.ascending(a.pipeline, b.pipeline));
+      if (!pick || !rows.find((r) => r.pipeline === pick)) pick = (rows.find((r) => r.kind === 'CD') || rows[0] || {}).pipeline;
+      sel.innerHTML = '';
+      d3.groups(rows, (r) => (org === 'All' ? r.org + ' · ' : '') + GROUPS[groupOf(r)]).forEach(([k, rs]) => {
+        const og = document.createElement('optgroup'); og.label = k;
+        rs.forEach((r) => { const o = document.createElement('option'); o.value = r.pipeline; o.textContent = r.pipeline; og.appendChild(o); });
+        sel.appendChild(og);
+      });
+      sel.value = pick;
+      document.querySelectorAll('.pp').forEach((el) => el.setAttribute('data-where', 'pipeline=' + enc(pick)));
+      const meta = pv.data.find((x) => x.pipeline === pick);
+      if (meta) document.getElementById('pp-meta').textContent = meta.org + ' · ' + tierLabel(meta.tier) + ' · ' + meta.kind + ' · ' + meta.app;
+    }
+    document.querySelectorAll('[data-source="pipeline_view"][data-where]').forEach((el) => {
+      if (pv.status !== 'ok') { if (pv.status === 'error') { el.textContent = '—'; el.classList.remove('dash-skeleton'); } return; }
+      const name = el.getAttribute('data-where').slice('pipeline='.length).replace(/%3D/g, '=').replace(/%26/g, '&').replace(/%25/g, '%');
+      const r = pv.data.find((x) => x.pipeline === name); if (!r) return;
+      const f = el.getAttribute('data-field'); const v = r[f];
+      const s = f === 'cfr' ? fmtPct(v) : f === 'deploys_per_week' ? d3.format('.2f')(v) : typeof v === 'number' ? fmtNum(v) : String(v);
+      el.textContent = s; el.classList.remove('dash-skeleton');
+      if (el.classList.contains('dr-badge')) el.setAttribute('data-r', s);
+    });
+
+    // Weekly group chart
+    const wc = document.getElementById('chart-weekly');
+    const wg = dash.data('weekly_group');
+    if (wg.status === 'error') failed(wc);
+    else if (wg.status === 'ok') {
+      wc.classList.remove('dash-skeleton'); wc.innerHTML = '';
+      const rows = wg.data.filter((r) => r.org === org);
+      const W = Math.max(280, wc.clientWidth), H = 240;
+      const svg = d3.select(wc).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+      const keys = ['prod', 'nprod', 'ci'];
+      const y = d3.scaleLinear([0, d3.max(rows, (r) => Math.max(r.prod, r.nprod, r.ci)) || 1], [H - 24, 8]).nice();
+      const ml = Math.ceil(textW(svg, String(y.domain()[1]))) + 10;
+      const x = d3.scaleBand(rows.map((r) => r.week), [ml, W - 4]).paddingInner(0.25).paddingOuter(0.1);
+      const xs = d3.scaleBand(keys, [0, x.bandwidth()]).padding(0.08);
+      svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('x1', ml).attr('x2', W - 4).attr('y1', (d) => y(d)).attr('y2', (d) => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('g').selectAll('text').data(y.ticks(4)).join('text').attr('x', ml - 6).attr('y', (d) => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => d);
+      const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r) => `translate(${x(r.week)},0)`);
+      const bw = Math.min(32, xs.bandwidth());
+      keys.forEach((k, i) => g.append('rect').attr('x', xs(k) + (xs.bandwidth() - bw) / 2).attr('width', bw).attr('y', (r) => y(r[k])).attr('height', (r) => Math.max(0, y(0) - y(r[k]))).attr('rx', Math.min(4, bw / 2)).attr('fill', dash.colors[i]));
+      const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - ml) / 60)));
+      svg.append('g').selectAll('text').data(rows.filter((r, i) => i % every === 0)).join('text').attr('x', (r) => x(r.week) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((r) => fmtWeek(P(r.week)));
+      svg.append('line').attr('x1', ml).attr('x2', W - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+      const card = wc.closest('.dr-card');
+      g.append('rect').attr('x', 0).attr('width', x.bandwidth()).attr('y', 0).attr('height', H - 24).attr('fill', 'transparent')
+        .on('mousemove', (ev, r) => showTip(card, ev, [['Week of ' + fmtWeek(P(r.week)), null, 'd'], ['Prod release  ' + r.prod, dash.colors[0]], ['Non-prod release  ' + r.nprod, dash.colors[1]], ['CI builds  ' + r.ci, dash.colors[2]]]))
+        .on('mouseleave', () => hideTip(card));
+    }
+
+    // Small multiples
+    const mc = document.getElementById('minis');
+    const wk = dash.data('weekly');
+    if (wk.status === 'error') failed(mc);
+    else if (wk.status === 'ok') {
+      mc.innerHTML = '';
+      const data = wk.data.filter(inOrg);
+      const byP = d3.groups(data, (r) => r.pipeline).sort((a, b) => d3.ascending(a[1][0].org, b[1][0].org) || (groupOf(a[1][0]) - groupOf(b[1][0])) || d3.ascending(a[0], b[0]));
+      const ymax = d3.max(data, (r) => r.deployments) || 1;
+      byP.forEach(([pipe, rows]) => {
+        const card = document.createElement('div'); card.className = 'dr-card'; card.style.padding = 'var(--cds-pad-md)';
+        const head = document.createElement('div'); head.className = 'dr-mini-head';
+        const t = document.createElement('span'); t.className = 't'; t.textContent = pipe;
+        const n = document.createElement('span'); n.className = 'n'; n.textContent = `${org === 'All' ? rows[0].org + ' · ' : ''}${tierLabel(rows[0].tier)} ${rows[0].kind} · ${fmtNum(d3.sum(rows, (r) => r.deployments))} total`;
+        head.append(t, n); card.appendChild(head);
+        const box = document.createElement('div'); box.className = 'dr-mini'; card.appendChild(box); mc.appendChild(card);
+        const W = Math.max(200, box.clientWidth), H = 96;
+        const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+        const y = d3.scaleLinear([0, ymax], [H - 18, 4]);
+        const x = d3.scaleBand(rows.map((r) => r.week), [0, W]).paddingInner(0.2);
+        const color = dash.colors[groupOf(rows[0])];
+        svg.append('line').attr('x1', 0).attr('x2', W).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+        const bars = svg.append('g').selectAll('g').data(rows).join('g');
+        bars.append('rect').attr('x', (r) => x(r.week) + (x.bandwidth() - Math.min(32, x.bandwidth())) / 2).attr('width', Math.min(32, x.bandwidth())).attr('y', (r) => y(r.deployments)).attr('height', (r) => Math.max(0, y(0) - y(r.deployments))).attr('rx', 2).attr('fill', color);
+        svg.append('text').attr('x', 0).attr('y', H - 3).attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(fmtWeek(P(rows[0].week)));
+        svg.append('text').attr('x', W).attr('y', H - 3).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(fmtWeek(P(rows[rows.length - 1].week)));
+        bars.append('rect').attr('x', (r) => x(r.week)).attr('width', x.bandwidth()).attr('y', 0).attr('height', H - 18).attr('fill', 'transparent')
+          .on('mousemove', (ev, r) => showTip(card, ev, [['Week of ' + fmtWeek(P(r.week)), null, 'd'], [r.deployments + (r.deployments === 1 ? ' run' : ' runs')]]))
+          .on('mouseleave', () => hideTip(card));
+      });
+    }
+
+    // Funnel
+    const fc = document.getElementById('chart-funnel');
+    const fu = dash.data('funnel');
+    if (fu.status === 'error') failed(fc);
+    else if (fu.status === 'ok') {
+      fc.classList.remove('dash-skeleton'); fc.innerHTML = '';
+      const rows = fu.data.filter(inOrg).map((r) => ({ ...r, label: org === 'All' ? r.org + ' · ' + r.app : r.app }));
+      const W = Math.max(280, fc.clientWidth); const rowH = 40; const H = rows.length * rowH + 8;
+      const svg = d3.select(fc).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+      const ml = Math.ceil(d3.max(rows, (r) => textW(svg, r.label)) || 0) + 12;
+      const endW = Math.ceil(textW(svg, '000 → 00 prod · 00.0%')) + 10;
+      const x = d3.scaleLinear([0, d3.max(rows, (r) => r.nprod) || 1], [ml, Math.max(ml + 40, W - endW)]);
+      const card = fc.closest('.dr-card');
+      const g = svg.selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${i * rowH + 6})`);
+      g.append('text').attr('x', ml - 10).attr('y', 14).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text((r) => r.label);
+      g.append('rect').attr('x', ml).attr('y', 4).attr('height', 20).attr('rx', 4).attr('width', (r) => Math.max(2, x(r.nprod) - ml)).attr('fill', dash.colors[1]);
+      g.append('rect').attr('x', ml).attr('y', 8).attr('height', 12).attr('rx', 3).attr('width', (r) => r.prod ? Math.max(3, x(r.prod) - ml) : 0).attr('fill', dash.colors[0]);
+      g.append('text').attr('x', (r) => x(r.nprod) + 8).attr('y', 14).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((r) => `${r.nprod} → ${r.prod} prod · ${r.ratio == null ? '—' : fmtPct(r.ratio)}`);
+      g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH - 4).attr('fill', 'transparent')
+        .on('mousemove', (ev, r) => showTip(card, ev, [[r.label, null, 'd'], ['Non-prod deploys  ' + r.nprod, dash.colors[1]], ['Prod deploys  ' + r.prod, dash.colors[0]], ['Reached prod  ' + (r.ratio == null ? '—' : fmtPct(r.ratio))]]))
+        .on('mouseleave', () => hideTip(card));
+    }
+
+    // Pipeline table
+    const tb = document.querySelector('#ptable tbody');
+    if (pv.status === 'ok') {
+      tb.innerHTML = '';
+      pv.data.filter(inOrg).sort((a, b) => d3.ascending(a.org, b.org) || (groupOf(a) - groupOf(b)) || d3.ascending(a.pipeline, b.pipeline)).forEach((r) => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-key', r.pipeline);
+        if (r.pipeline === pick) row.classList.add('sel');
+        const cells = [
+          [r.pipeline, ''], [r.org, 'l'], [tierLabel(r.tier), 'l'], [r.kind, 'l dr-hide-narrow'],
+          [fmtNum(r.executions), ''], [fmtNum(r.deployments), ''], [d3.format('.2f')(r.deploys_per_week), ''],
+          [fmtPct(r.cfr), ''], [r.lead_time_display, r.lead_time_is_runtime ? 'warn' : ''], [r.mttr_display, '']
+        ];
+        cells.forEach(([v, cls]) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = v; row.appendChild(td); });
+        [r.df_rating, r.lt_rating, r.cfr_rating, r.mttr_rating].forEach((v) => { const td = document.createElement('td'); td.className = 'l'; td.appendChild(badge(v)); row.appendChild(td); });
+        row.addEventListener('click', () => { pick = r.pipeline; render(); document.getElementById('pipeline-dora').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        tb.appendChild(row);
+      });
+    } else if (pv.status === 'error') {
+      tb.innerHTML = ''; const row = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 14; td.textContent = 'Failed to load'; row.appendChild(td); tb.appendChild(row);
+    }
+  };
+  document.getElementById('pp-select').addEventListener('change', (e) => { pick = e.target.value; render(); });
+  dash.onData(render);
+})();
+</script>
+
+<p class="dr-footer" style="max-width:1200px;margin-inline:auto">Source: Harness DORA API exports for orgs Banner, APG and Financial_Aid (project Build_Deploy), Jul 1 – Sep 30, 2026. Static snapshot generated Oct 21, 2026.</p>
+</div>
+</body>
+</html>
